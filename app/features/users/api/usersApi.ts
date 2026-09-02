@@ -1,15 +1,13 @@
 import { User } from "@/app/(dashboard)/users/data"
 import { $api } from "@/app/shared/api/api"
 
-// export const fetchUsersApi = () => $api.get("/users")
-
-// export type User = {
-//   id: number
-//   username: string
-//   role: string
-//   phone: string
-//   joinedDate: Date
-// }
+export type User = {
+  id: number
+  username: string
+  role: string
+  phone: string
+  joinedDate: Date
+}
 
 export const fetchUsersApi = async (): Promise<User[]> => {
   const res = await $api.get("/users")
