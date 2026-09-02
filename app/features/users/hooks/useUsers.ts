@@ -4,8 +4,8 @@ import {
   deleteUsersApi,
   fetchUsersApi,
   updateUsersApi,
+  type User,
 } from "../api/usersApi"
-import { User } from "@/app/(dashboard)/users/data"
 
 export const UsersKeys = {
   all: ["users"] as const,
