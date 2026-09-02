@@ -1,0 +1,143 @@
+// widgets/shops/ShopFormDialog.tsx
+"use client"
+
+import { useEffect, useState } from "react"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useCreateStore, useUpdateStore } from "@/lib/hooks/use-stores"
+import type { Store } from "@/types/store"
+import type { StorePayload } from "@/lib/api/stores"
+import { toast } from "sonner"
+
+interface StoreFormDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  store?: Store | null
+}
+
+const emptyForm: StorePayload = {
+  name: "",
+  region: "",
+  district: "",
+  address: "",
+}
+
+export function StoreFormDialog({ open, onOpenChange, store }: StoreFormDialogProps) {
+  const [form, setForm] = useState<StorePayload>(emptyForm)
+  const createMutation = useCreateStore()
+  const updateMutation = useUpdateStore()
+
+  const isEdit = Boolean(store)
+  const loading = createMutation.isPending || updateMutation.isPending
+
+  useEffect(() => {
+    if (store) {
+      setForm({
+        name: store.name,
+        region: store.region,
+        district: store.district,
+        address: store.address,
+      })
+    } else {
+      setForm(emptyForm)
+    }
+  }, [store, open])
+
+  const handleChange = (key: keyof StorePayload, value: string) => {
+    setForm((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const handleSubmit = () => {
+    if (!form.name.trim()) return toast.error("Do'kon nomini kiriting")
+    if (!form.region.trim()) return toast.error("Viloyatni kiriting")
+    if (!form.district.trim()) return toast.error("Tumanni kiriting")
+    if (!form.address.trim()) return toast.error("Manzilni kiriting")
+
+    if (isEdit && store) {
+      updateMutation.mutate(
+        { id: store.id, payload: form },
+        { onSuccess: () => onOpenChange(false) }
+      )
+    } else {
+      createMutation.mutate(form, {
+        onSuccess: () => onOpenChange(false),
+      })
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="w-110 max-w-[calc(100%-2rem)] gap-0 p-0 overflow-hidden">
+        <DialogHeader className="space-y-1.5 border-b px-6 py-4">
+          <DialogTitle className="text-lg">
+            {isEdit ? "Do'konni tahrirlash" : "Yangi do'kon qo'shish"}
+          </DialogTitle>
+          <DialogDescription>
+            Do'kon ma'lumotlarini to'ldiring va saqlang.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex flex-col gap-5 px-6 py-6">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="name">Do'kon nomi</Label>
+            <Input
+              id="name"
+              value={form.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+              placeholder="Masalan: Tezkor market"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="region">Viloyat</Label>
+              <Input
+                id="region"
+                value={form.region}
+                onChange={(e) => handleChange("region", e.target.value)}
+                placeholder="Xorazm"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="district">Tuman</Label>
+              <Input
+                id="district"
+                value={form.district}
+                onChange={(e) => handleChange("district", e.target.value)}
+                placeholder="Urganch"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="address">To'liq manzil</Label>
+            <Input
+              id="address"
+              value={form.address}
+              onChange={(e) => handleChange("address", e.target.value)}
+              placeholder="Ko'cha, uy raqami..."
+            />
+          </div>
+        </div>
+
+        <DialogFooter className="gap-2 border-t px-6 py-4">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
+            Bekor qilish
+          </Button>
+          <Button onClick={handleSubmit} disabled={loading}>
+            {loading ? "Saqlanmoqda..." : isEdit ? "Saqlash" : "Qo'shish"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
