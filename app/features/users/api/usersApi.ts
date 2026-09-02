@@ -1,4 +1,3 @@
-import { User } from "@/app/(dashboard)/users/data"
 import { $api } from "@/app/shared/api/api"
 
 export type User = {
