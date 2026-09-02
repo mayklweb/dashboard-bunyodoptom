@@ -26,7 +26,8 @@ function Users() {
   const deleteUser = useDeleteUsers()
   const editUser = useEditUsers()
 
-  const { data: usersData = [], isLoading, isError } = useUsers()
+  const { data: usersDataRaw, isLoading, isError } = useUsers()
+  const usersData: User[] = (usersDataRaw as User[]) ?? []
 
   // --------------------------------------------------
   // Loading / Error
