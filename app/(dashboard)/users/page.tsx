@@ -167,7 +167,7 @@ function Users() {
         <CardContent className="px-0">
           <UsersTable
             users={usersData}
-            onEdit={(user: User) => handleOpenForm(user)}
+            onEdit={(user) => handleOpenForm(user as User)}
             onDelete={(userId: number) => setDeletingUserId(userId)}
           />
         </CardContent>
