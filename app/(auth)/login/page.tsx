@@ -49,13 +49,16 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      const response = await fetch("https://api.bunyodoptom.uz/api/v1/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
+      const response = await fetch(
+        "https://api.bunyodoptom.uz/api/v1/admin/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      )
 
       if (!response.ok) {
         const errorData = await response.json()
@@ -64,19 +67,14 @@ export default function LoginPage() {
 
       const result = await response.json()
 
-      // Store token in localStorage
-      if (result.token) {
-        localStorage.setItem("token", result.token)
+      const token = result.data?.token
+      if (!token) {
+        throw new Error("Login succeeded but no token was returned")
       }
 
-      // Store user data if needed
-      if (result.data) {
-        localStorage.setItem("user", JSON.stringify(result.data))
-      }
+      localStorage.setItem("token", token)
+      localStorage.setItem("user", JSON.stringify(result.data.user))
 
-      console.log("Login successful:", result)
-
-      // Redirect to dashboard
       router.push("/")
     } catch (err) {
       setError(
@@ -119,9 +117,7 @@ export default function LoginPage() {
                 {...register("phone")}
               />
               {errors.phone && (
-                <p className="text-sm text-red-500">
-                  {errors.phone.message}
-                </p>
+                <p className="text-sm text-red-500">{errors.phone.message}</p>
               )}
             </div>
 
@@ -169,7 +165,9 @@ export default function LoginPage() {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-gray-500">Or continue with</span>
+            <span className="bg-white px-2 text-gray-500">
+              Or continue with
+            </span>
           </div>
         </div>
 

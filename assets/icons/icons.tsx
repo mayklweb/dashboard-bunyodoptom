@@ -34,6 +34,7 @@ import {
   User,
   ViewIcon,
   WalletCardsIcon,
+  UsersRoundIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
@@ -42,6 +43,16 @@ interface IconProps {
 }
 
 export const UserIcon = ({ className }: IconProps) => {
+  return (
+    <HugeiconsIcon
+      icon={UsersRoundIcon}
+      className={className}
+      size={24}
+      strokeWidth={1.5}
+    />
+  )
+}
+export const StaffIcon = ({ className }: IconProps) => {
   return (
     <HugeiconsIcon
       icon={User}
@@ -211,7 +222,6 @@ export const DeliveryIcon = ({ className }: IconProps) => {
     <HugeiconsIcon
       className={className}
       icon={ShippingTruck01Icon}
-      
       size={24}
       strokeWidth={1.5}
     />

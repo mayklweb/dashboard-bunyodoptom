@@ -28,6 +28,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "app/widgets/orders/order-status-badge"  ],
   "exclude": ["node_modules"]
 }

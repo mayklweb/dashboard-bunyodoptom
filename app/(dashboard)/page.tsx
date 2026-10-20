@@ -1,57 +1,41 @@
+// widgets/dashboard/RoleDashboard.tsx
+// Bosh sahifada (app/page.tsx) faqat shuni render qiling: <RoleDashboard />
 "use client"
 
 import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
+import { Loader2 } from "lucide-react"
 
-function Page() {
-  const [user, setUser] = useState<any>(null)
+import { getStoredUser, resolveRole, type Role } from "@/lib/auth"
+import { CourierDashboardClient } from "./courier-dashboard/CourierDashboardClient"
+import { ManagerDashboardClient } from "./meneger-dashboard/ManagerDashboard"
+
+export default function Page() {
+  const [role, setRole] = useState<Role | null | undefined>(undefined)
+
   const router = useRouter()
 
-  useEffect(() => {
-    const userData = localStorage.getItem("user")
-    if (userData) {
-      setUser(JSON.parse(userData))
-    }
-  }, [])
+  useEffect(() => setRole(resolveRole(getStoredUser())), [])
 
-  const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    router.push("/login")
+  // Omborchi uchun dashboard yo'q, to'g'ridan-to'g'ri mahsulotlarga yo'naltiramiz
+  useEffect(() => {
+    if (role === "warehouse") router.replace("/products")
+  }, [role, router])
+
+  if (role === undefined || role === "warehouse") {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    )
   }
 
+  if (role === "courier") return <CourierDashboardClient />
+  if (role === "manager" || role === "admin") return <ManagerDashboardClient />
+
   return (
-    <div className="space-y-6 mt-15">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <Button onClick={handleLogout} variant="outline">
-          Logout
-        </Button>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Welcome Back!</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {user && <p>Hello, {user.username || user.name}!</p>}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Stats</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Your dashboard content here</p>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <p className="p-6 text-muted-foreground">
+      Rolingiz aniqlanmadi. Qayta kiring yoki administratorga murojaat qiling.
+    </p>
   )
 }
-
-export default Page

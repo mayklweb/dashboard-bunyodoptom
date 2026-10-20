@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { OrderStatusBadge } from "./order-status-badge"
 import type { Order } from "@/types/order"
+import { StatusBadge } from "./StatusBadge"
 
 interface OrdersTableProps {
   orders: Order[]
@@ -84,7 +84,9 @@ export function OrdersTable({ orders, onView }: OrdersTableProps) {
                 </div>
               </TableCell>
               <TableCell>
-                <OrderStatusBadge status={order.status} />
+                <StatusBadge
+                  status={order.status as Parameters<typeof StatusBadge>[0]["status"]}
+                />
               </TableCell>
               <TableCell className="text-sm text-muted-foreground">
                 {new Date(order.created_at).toLocaleDateString("uz-UZ")}

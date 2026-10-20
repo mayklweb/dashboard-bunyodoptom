@@ -36,7 +36,7 @@ export function CategoriesTable({
   }
 
   return (
-    <div className="rounded-md border border-border">
+    <div className="rounded-md border border-border bg-white dark:bg-background">
       <Table>
         <TableHeader>
           <TableRow>

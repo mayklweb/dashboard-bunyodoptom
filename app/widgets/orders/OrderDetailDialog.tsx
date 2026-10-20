@@ -78,7 +78,7 @@ export function OrderDetailDialog({
                   }
                   disabled={updateStatusMutation.isPending}
                 >
-                  <SelectTrigger className="h-10 w-[180px] text-base">
+                  <SelectTrigger className="h-10 w-45 text-base">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>

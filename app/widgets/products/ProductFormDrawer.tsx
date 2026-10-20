@@ -149,7 +149,8 @@ export function ProductFormDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction="right">
-      <DrawerContent className="h-full w-150">
+      {/* Mobil: to'liq kenglik | Tablet: o'rtacha | Desktop: max-w-150 */}
+      <DrawerContent className="h-full w-full sm:max-w-md md:max-w-lg lg:max-w-150">
         <DrawerHeader className="text-left">
           <DrawerTitle>
             {isEdit ? "Mahsulotni tahrirlash" : "Yangi mahsulot qo'shish"}
@@ -159,7 +160,7 @@ export function ProductFormDrawer({
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="flex flex-col gap-5 overflow-y-auto px-4 pb-4">
+        <div className="flex flex-col gap-5 overflow-y-auto px-4 pb-4 sm:px-6">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="name">Mahsulot nomi</Label>
             <Input
@@ -220,12 +221,14 @@ export function ProductFormDrawer({
             </Select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* Mobilda 1 ustun, sm dan boshlab 2 ustun */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="price">Narx (so'm)</Label>
               <Input
                 id="price"
                 type="number"
+                inputMode="decimal"
                 value={form.price || ""}
                 onChange={(e) => handleChange("price", Number(e.target.value))}
                 placeholder="77000"
@@ -237,6 +240,7 @@ export function ProductFormDrawer({
               <Input
                 id="stock_qty"
                 type="number"
+                inputMode="numeric"
                 value={form.stock_qty || ""}
                 onChange={(e) =>
                   handleChange("stock_qty", Number(e.target.value))
@@ -250,6 +254,7 @@ export function ProductFormDrawer({
               <Input
                 id="kg"
                 type="number"
+                inputMode="decimal"
                 step="0.01"
                 value={form.kg ?? ""}
                 onChange={(e) =>
@@ -267,6 +272,7 @@ export function ProductFormDrawer({
               <Input
                 id="kg_price"
                 type="number"
+                inputMode="decimal"
                 value={form.kg_price ?? ""}
                 onChange={(e) =>
                   handleChange(
@@ -283,6 +289,7 @@ export function ProductFormDrawer({
               <Input
                 id="piece"
                 type="number"
+                inputMode="numeric"
                 value={form.piece ?? ""}
                 onChange={(e) =>
                   handleChange(
@@ -299,6 +306,7 @@ export function ProductFormDrawer({
               <Input
                 id="piece_price"
                 type="number"
+                inputMode="decimal"
                 value={form.piece_price ?? ""}
                 onChange={(e) =>
                   handleChange(
@@ -342,15 +350,22 @@ export function ProductFormDrawer({
           </div>
         </div>
 
-        <DrawerFooter className="flex-row justify-end gap-2 border-t">
+        {/* Mobilda tugmalar ustma-ust va to'liq kenglikda, sm dan boshlab yonma-yon */}
+        <DrawerFooter className="flex flex-col-reverse gap-2 border-t sm:flex-row sm:justify-end">
           <Button
             variant="outline"
             size={"lg"}
+            className="w-full sm:w-auto"
             onClick={() => onOpenChange(false)}
           >
             Bekor qilish
           </Button>
-          <Button onClick={handleSubmit} disabled={loading} size={"lg"}>
+          <Button
+            onClick={handleSubmit}
+            disabled={loading}
+            size={"lg"}
+            className="w-full sm:w-auto"
+          >
             {loading ? "Saqlanmoqda..." : isEdit ? "Saqlash" : "Qo'shish"}
           </Button>
         </DrawerFooter>

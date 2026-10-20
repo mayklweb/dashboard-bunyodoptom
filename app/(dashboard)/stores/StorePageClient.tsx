@@ -44,8 +44,8 @@ export function StoresPageClient() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Do'konlar</h1>
-        <Button onClick={handleAddClick}>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button size={"lg"} onClick={handleAddClick}>
+          <Plus />
           Do'kon qo'shish
         </Button>
       </div>
@@ -55,11 +55,13 @@ export function StoresPageClient() {
           Yuklanmoqda...
         </div>
       ) : (
-        <StoresTable
-          stores={stores ?? []}
-          onEdit={handleEditClick}
-          onDelete={handleDeleteClick}
-        />
+        <div className="rounded-md bg-white dark:bg-card">
+          <StoresTable
+            stores={stores ?? []}
+            onEdit={handleEditClick}
+            onDelete={handleDeleteClick}
+          />
+        </div>
       )}
 
       <StoreFormDialog
