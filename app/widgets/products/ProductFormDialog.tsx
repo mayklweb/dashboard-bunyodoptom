@@ -86,7 +86,7 @@ export function ProductFormDialog({
       setForm({
         category_id: product.category_id,
         name: product.name,
-        price: product.price,
+        price: product.price ?? 0,
         kg_price: product.kg_price,
         piece_price: product.piece_price,
         kg: product.kg,
@@ -94,7 +94,7 @@ export function ProductFormDialog({
         stock_qty: product.stock_qty,
         description: product.description,
         status: product.status,
-        brand_id: product.brand_id,
+        brand_id: product.brand_id ?? 0,
       })
     } else {
       setForm(emptyForm)
