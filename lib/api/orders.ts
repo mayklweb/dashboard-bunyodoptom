@@ -16,6 +16,8 @@ export async function updateOrderStatus(
   id: number,
   status: OrderStatus
 ): Promise<Order> {
+  console.log("Status:", status)
+  console.log("Payload:", { status })
   const res = await api.patch(`/orders/${id}/status`, { status })
   return res.data.data ?? res.data
 }

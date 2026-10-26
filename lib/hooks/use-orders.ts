@@ -17,11 +17,15 @@ export function useUpdateOrderStatus() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, status }: { id: number; status: OrderStatus }) =>
+    mutationFn: ({ id, status }: { id: number; status: OrderStatus , }) => 
       updateOrderStatus(id, status),
+    
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] })
+      console.log("Status:", status);
+console.log("Payload:", { status });
       toast.success("Buyurtma statusi yangilandi")
+      
     },
     onError: (error) => {
       console.error("Status yangilashda xatolik:", error)

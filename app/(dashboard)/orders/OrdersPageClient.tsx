@@ -3,13 +3,13 @@
 
 import { useState } from "react"
 import { OrdersTable } from "@/app/widgets/orders/OrdersTable"
-// import { OrderDetailDialog } from "@/app/widgets/orders/OrderDetailDialog"
 import { useOrders } from "@/lib/hooks/use-orders"
 import type { Order } from "@/types/order"
 import { OrderDetailDrawer } from "@/app/widgets/orders/OrderDetailDrawer"
 
 export function OrdersPageClient() {
   const { data: orders, isLoading } = useOrders()
+
 
   const [detailOpen, setDetailOpen] = useState(false)
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)

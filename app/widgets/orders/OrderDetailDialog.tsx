@@ -37,10 +37,10 @@ const paymentLabel: Record<string, string> = {
 }
 
 const statusOptions: { value: OrderStatus; label: string }[] = [
-  { value: "pending", label: "Kutilmoqda" },
-  { value: "processing", label: "Jarayonda" },
-  { value: "completed", label: "Bajarildi" },
-  { value: "cancelled", label: "Bekor qilindi" },
+  { value: "new", label: "Yangi" },
+  { value: "on_the_way", label: "Yo'lda" },
+  { value: "delivered", label: "Yetkazildi" },
+  { value: "canceled", label: "Bekor qilindi" },
 ]
 
 export function OrderDetailDialog({

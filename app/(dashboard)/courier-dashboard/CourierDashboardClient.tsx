@@ -228,7 +228,7 @@ export function CourierDashboardClient() {
           </CardHeader>
           <CardContent className="space-y-3">
             <div>
-              <p className="text-lg font-semibold">{current.storeName}</p>
+              <p className="text-lg font-semibold">{current.market.name}</p>
               <p className="text-sm text-muted-foreground">
                 Buyurtma #{current.number}
               </p>
@@ -325,7 +325,7 @@ export function CourierDashboardClient() {
             >
               <div className="min-w-0">
                 <p className="truncate font-medium">
-                  #{o.number} · {o.storeName}
+                  #{o.number} · {o.market.name}
                 </p>
                 <p className="truncate text-xs text-muted-foreground">
                   {o.address || "Manzil ko'rsatilmagan"}
@@ -350,7 +350,7 @@ export function CourierDashboardClient() {
         open={cancelTarget !== null}
         onOpenChange={(open) => !open && setCancelTarget(null)}
         orderLabel={
-          cancelTarget ? `#${cancelTarget.number} · ${cancelTarget.storeName}` : ""
+          cancelTarget ? `#${cancelTarget.number} · ${cancelTarget.market.name}` : ""
         }
         loading={busyId !== null}
         onConfirm={(reason) =>

@@ -42,10 +42,18 @@ export function MyOrdersClient() {
 
   const load = useCallback(async () => {
     setLoading(true)
+
     try {
-      setOrders(await fetchCourierOrders(date))
+      const result = await fetchCourierOrders(date)
+
+      console.log("API dan kelgan natija:", result)
+      console.log("Buyurtmalar soni:", result.length)
+
+      setOrders(result)
       setError(null)
     } catch (e) {
+      console.error("Buyurtmalar xatosi:", e)
+
       setError(e instanceof Error ? e.message : "Buyurtmalarni yuklab bo'lmadi")
     } finally {
       setLoading(false)
@@ -56,10 +64,27 @@ export function MyOrdersClient() {
     load()
   }, [load])
 
+  const courierDistrict = "Urganch"
+
+  const courierRegion = "Xorazm"
+
   const visible = useMemo(
-    () => (filter === "all" ? orders : orders.filter((o) => o.status === filter)),
+    () =>
+      orders.filter((order) => {
+        const region = order.market?.region?.trim().toLowerCase()
+
+        const matchesRegion = region === courierRegion.trim().toLowerCase()
+
+        const matchesStatus = filter === "all" || order.status === filter
+
+        return matchesRegion && matchesStatus
+      }),
     [orders, filter]
   )
+
+  console.log("Barcha buyurtmalar:", orders)
+  console.log("Birinchi buyurtma hududi:", orders[0]?.market)
+  console.log(visible)
 
   async function changeStatus(
     order: CourierOrder,
@@ -79,7 +104,9 @@ export function MyOrdersClient() {
       )
       setCancelTarget(null)
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Statusni o'zgartirib bo'lmadi")
+      toast.error(
+        e instanceof Error ? e.message : "Statusni o'zgartirib bo'lmadi"
+      )
     } finally {
       setBusyId(null)
     }
@@ -140,7 +167,7 @@ export function MyOrdersClient() {
               <CardContent className="space-y-3 p-4">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="font-semibold">{o.storeName}</p>
+                    <p className="font-semibold">{o.market.name}</p>
                     <p className="text-xs text-muted-foreground">
                       Buyurtma #{o.number}
                     </p>
@@ -208,7 +235,9 @@ export function MyOrdersClient() {
         open={cancelTarget !== null}
         onOpenChange={(open) => !open && setCancelTarget(null)}
         orderLabel={
-          cancelTarget ? `#${cancelTarget.number} · ${cancelTarget.storeName}` : ""
+          cancelTarget
+            ? `#${cancelTarget.number} · ${cancelTarget.market.name}`
+            : ""
         }
         loading={busyId !== null}
         onConfirm={(reason) =>

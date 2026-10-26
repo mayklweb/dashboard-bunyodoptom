@@ -61,6 +61,12 @@ export const NAV_GROUPS: NavGroup[] = [
         roles: ["admin", "manager"],
       },
       {
+        name: "Buyurtmalar Royhati",
+        url: "/orders-table",
+        icon: DeliveryIcon,
+        roles: ["admin", "manager"],
+      },
+      {
         name: "Dastavshiklar",
         url: "/couriers",
         icon: StaffIcon,

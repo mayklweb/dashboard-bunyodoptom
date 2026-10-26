@@ -63,12 +63,7 @@ export interface OrderAddress {
   updated_at: string
 }
 
-export type OrderStatus =
-  | "pending"
-  | "processing"
-  | "completed"
-  | "cancelled"
-
+export type OrderStatus = "new" | "on_the_way" | "delivered" | "canceled"
 export type PaymentMethod = "cash" | "card" | "transfer"
 
 export interface Order {

@@ -10,7 +10,7 @@ import {
 
 const ENDPOINTS = {
   orders: "/orders", // GET ?search=&status=&courier_id=&date=&page=
-  couriers: "/admin/couriers", // GET. TAXMINIY (xodimlar endpointiga moslang)
+  couriers: "/admin/staff", // GET. TAXMINIY (xodimlar endpointiga moslang)
   order: (id: number | string) => `/orders/${id}`, // PATCH { courier_id }. TAXMINIY
 }
 

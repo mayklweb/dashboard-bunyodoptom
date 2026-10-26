@@ -19,7 +19,13 @@ export type OrderStatus = "new" | "on_the_way" | "delivered" | "cancelled"
 export interface CourierOrder {
   id: number | string
   number: string
-  storeName: string
+  market: {
+    market_id: number
+    name: string
+    address: string
+    region: string | null
+    district: string | null
+  }
   address: string
   phone: string
   amount: number
@@ -52,7 +58,7 @@ export function normalizeStatus(raw: unknown): OrderStatus {
     return "cancelled"
   }
 
-  if (["on the way", "on_the_way", "on-the-way"].includes(s)) {
+  if (["on_the_way", "on the way", "on-the-way"].includes(s)) {
     return "on_the_way"
   }
 
@@ -68,14 +74,28 @@ function normalizeOrder(o: any): CourierOrder {
   return {
     id: o.id ?? o._id,
     number: String(o.number ?? o.order_number ?? o.id ?? o._id),
+
+    market: {
+      market_id: o.market?.market_id ?? 0,
+      name: o.market?.name ?? "",
+      address: o.market?.address ?? "",
+      region: o.market?.region ?? null,
+      district: o.market?.district ?? null,
+    },
+
     storeName:
-      o.store_name ?? o.store?.name ?? o.customer_name ?? "Noma'lum do'kon",
-    address: o.address ?? o.store?.address ?? "",
-    phone: o.phone ?? o.store?.phone ?? o.customer_phone ?? "",
+      o.market?.name ??
+      o.store_name ??
+      o.store?.name ??
+      o.user?.name ??
+      "Noma'lum do'kon",
+
+    address: o.market?.address ?? o.address ?? "",
+    phone: o.user?.phone ?? o.phone ?? o.customer_phone ?? "",
     amount: Number(o.total_amount ?? o.amount ?? o.total ?? 0),
     status: normalizeStatus(o.status),
     createdAt: o.created_at ?? o.createdAt,
-  }
+  } as CourierOrder
 }
 
 export async function request(path: string, init?: RequestInit) {
@@ -126,16 +146,15 @@ export function extractList(json: any): any[] {
 export async function fetchCourierOrders(
   date: string
 ): Promise<CourierOrder[]> {
-  const json = await request(`${ENDPOINTS.orders}?date=${date}`)
-  const orders: CourierOrder[] = extractList(json).map(normalizeOrder)
+  const json = await request(ENDPOINTS.orders)
 
-  // Backend date parametrini hisobga olmasa ham, kunga qarab o'zimiz filtrlaymiz
-  return orders.filter(
-    (o) =>
-      !o.createdAt ||
-      !/^\d{4}-\d{2}-\d{2}/.test(o.createdAt) ||
-      o.createdAt.slice(0, 10) === date
-  )
+  console.log("Orders API raw response:", json)
+
+  const list = extractList(json)
+
+  console.log("Orders API list:", list)
+
+  return list.map(normalizeOrder)
 }
 
 export async function updateOrderStatus(
