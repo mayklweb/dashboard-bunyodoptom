@@ -110,7 +110,7 @@ export function OrderDetailDialog({
                 </div>
                 <div className="rounded-md border p-4">
                   <p className="mb-2 text-xs font-medium text-muted-foreground">
-                    DO'KON
+                    DO&apos;KON
                   </p>
                   <p className="text-base font-medium">{order.market?.name}</p>
                   <p className="text-sm text-muted-foreground">
@@ -190,7 +190,7 @@ export function OrderDetailDialog({
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-1">
                   <span className="text-sm text-muted-foreground">
-                    To'lov usuli:{" "}
+                    To&apos;lov usuli:{" "}
                     {paymentLabel[order.payment_method] ?? order.payment_method}
                   </span>
                   <span className="text-sm text-muted-foreground">

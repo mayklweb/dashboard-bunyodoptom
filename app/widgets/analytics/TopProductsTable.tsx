@@ -17,12 +17,12 @@ export function TopProductsTable({ summary }: { summary: AnalyticsSummary }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Eng ko'p sotilgan mahsulotlar</CardTitle>
+        <CardTitle className="text-base">Eng ko&apos;p sotilgan mahsulotlar</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         {summary.topProducts.length === 0 ? (
           <p className="py-10 text-center text-sm text-muted-foreground">
-            Ma'lumot yo'q
+            Ma&apos;lumot yo&apos;q
           </p>
         ) : (
           <Table>

@@ -32,9 +32,9 @@ import { StatusBadge } from "@/app/widgets/orders/StatusBadge"
 
 /* ====== TAXMIN QILINGAN MAYDONLAR — o'zingizniki bilan almashtiring ====== */
 const orderDistrict = (o: ManagerOrder) =>
-  ((o as any).district as string | undefined) ?? "Tumansiz"
+  (o as { district?: string }).district ?? "Tumansiz"
 const courierDistrict = (c: Courier) =>
-  ((c as any).district as string | undefined) ?? "Tumansiz"
+  (c as { district?: string }).district ?? "Tumansiz"
 /* ======================================================================== */
 
 const DAY_NAMES = ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"]
@@ -87,7 +87,6 @@ export function OrdersTableClient() {
   )
 
   const load = useCallback(async () => {
-    setLoading(true)
     try {
       const [cs, ...perDay] = await Promise.all([
         fetchCouriers(),
@@ -105,6 +104,8 @@ export function OrdersTableClient() {
   }, [days])
 
   useEffect(() => {
+    // load() faqat so'rov javobidan keyin setState qiladi
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load()
   }, [load])
 

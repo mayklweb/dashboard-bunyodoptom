@@ -43,10 +43,10 @@ export function StoresPageClient() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Do'konlar</h1>
+        <h1 className="text-2xl font-semibold">Do&apos;konlar</h1>
         <Button size={"lg"} onClick={handleAddClick}>
           <Plus />
-          Do'kon qo'shish
+          Do&apos;kon qo&apos;shish
         </Button>
       </div>
 

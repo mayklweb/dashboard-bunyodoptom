@@ -2,20 +2,26 @@
 // Bosh sahifada (app/page.tsx) faqat shuni render qiling: <RoleDashboard />
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useSyncExternalStore } from "react"
 import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 
-import { getStoredUser, resolveRole, type Role } from "@/lib/auth"
+import { getStoredUser, resolveRole } from "@/lib/auth"
 import { CourierDashboardClient } from "./courier-dashboard/CourierDashboardClient"
 import { ManagerDashboardClient } from "./meneger-dashboard/ManagerDashboard"
 
+const subscribe = () => () => {}
+
 export default function Page() {
-  const [role, setRole] = useState<Role | null | undefined>(undefined)
+  // localStorage faqat clientda mavjud: server snapshoti `undefined`,
+  // hydrationdan keyin rol qayta hisoblanadi.
+  const role = useSyncExternalStore(
+    subscribe,
+    () => resolveRole(getStoredUser()),
+    () => undefined
+  )
 
   const router = useRouter()
-
-  useEffect(() => setRole(resolveRole(getStoredUser())), [])
 
   // Omborchi uchun dashboard yo'q, to'g'ridan-to'g'ri mahsulotlarga yo'naltiramiz
   useEffect(() => {

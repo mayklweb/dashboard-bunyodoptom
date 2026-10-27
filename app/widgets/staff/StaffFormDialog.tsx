@@ -1,7 +1,7 @@
 // widgets/staff/StaffFormDialog.tsx
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -35,26 +35,30 @@ const emptyForm: StaffPayload = {
 
 export function StaffFormDialog({ open, onOpenChange, staff }: StaffFormDialogProps) {
   const [form, setForm] = useState<StaffPayload>(emptyForm)
+  const [prevResetKey, setPrevResetKey] = useState<string | null>(null)
   const createMutation = useCreateStaff()
   const updateMutation = useUpdateStaff()
 
   const isEdit = Boolean(staff)
   const loading = createMutation.isPending || updateMutation.isPending
 
-  useEffect(() => {
-    if (staff) {
-      setForm({
-        name: staff.name,
-        phone: staff.phone,
-        password: "",
-        role: staff.role,
-        region: staff.region ?? "",
-        district: staff.district ?? "",
-      })
-    } else {
-      setForm(emptyForm)
-    }
-  }, [staff, open])
+  // Dialog ochilganda yoki boshqa yozuv tanlanganda formani sinxronlaymiz
+  const resetKey = `${open}:${staff?.id ?? "new"}`
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey)
+    setForm(
+      staff
+        ? {
+            name: staff.name,
+            phone: staff.phone,
+            password: "",
+            role: staff.role,
+            region: staff.region ?? "",
+            district: staff.district ?? "",
+          }
+        : emptyForm
+    )
+  }
 
   const handleChange = (key: keyof StaffPayload, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -92,7 +96,7 @@ export function StaffFormDialog({ open, onOpenChange, staff }: StaffFormDialogPr
             {isEdit ? "Ishchini tahrirlash" : "Yangi ishchi qo'shish"}
           </DialogTitle>
           <DialogDescription>
-            Ishchi ma'lumotlarini to'ldiring va saqlang.
+            Ishchi ma&apos;lumotlarini to&apos;ldiring va saqlang.
           </DialogDescription>
         </DialogHeader>
 

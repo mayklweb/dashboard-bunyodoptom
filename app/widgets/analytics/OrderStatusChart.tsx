@@ -34,7 +34,7 @@ export function OrderStatusChart({ summary }: { summary: AnalyticsSummary }) {
       <CardContent>
         {data.length === 0 ? (
           <p className="py-10 text-center text-sm text-muted-foreground">
-            Ma'lumot yo'q
+            Ma&apos;lumot yo&apos;q
           </p>
         ) : (
           <ResponsiveContainer width="100%" height={260}>

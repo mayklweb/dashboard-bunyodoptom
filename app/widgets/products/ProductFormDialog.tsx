@@ -62,14 +62,14 @@ export function ProductFormDialog({
 
   const [categories, setCategories] = useState<Category[]>([])
   const [brands, setBrands] = useState<Brand[]>([])
-  const [optionsLoading, setOptionsLoading] = useState(false)
+  const [optionsLoading, setOptionsLoading] = useState(true)
+  const [prevResetKey, setPrevResetKey] = useState<string | null>(null)
 
   const isEdit = Boolean(product)
 
   useEffect(() => {
     if (!open) return
 
-    setOptionsLoading(true)
     Promise.all([getCategories(), getBrands()])
       .then(([categoriesData, brandsData]) => {
         setCategories(categoriesData)
@@ -81,25 +81,28 @@ export function ProductFormDialog({
       .finally(() => setOptionsLoading(false))
   }, [open])
 
-  useEffect(() => {
-    if (product) {
-      setForm({
-        category_id: product.category_id,
-        name: product.name,
-        price: product.price ?? 0,
-        kg_price: product.kg_price,
-        piece_price: product.piece_price,
-        kg: product.kg,
-        piece: product.piece,
-        stock_qty: product.stock_qty,
-        description: product.description,
-        status: product.status,
-        brand_id: product.brand_id ?? 0,
-      })
-    } else {
-      setForm(emptyForm)
-    }
-  }, [product, open])
+  // Dialog ochilganda yoki boshqa yozuv tanlanganda formani sinxronlaymiz
+  const resetKey = `${open}:${product?.id ?? "new"}`
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey)
+    setForm(
+      product
+        ? {
+            category_id: product.category_id,
+            name: product.name,
+            price: product.price ?? 0,
+            kg_price: product.kg_price,
+            piece_price: product.piece_price,
+            kg: product.kg,
+            piece: product.piece,
+            stock_qty: product.stock_qty,
+            description: product.description,
+            status: product.status,
+            brand_id: product.brand_id ?? 0,
+          }
+        : emptyForm
+    )
+  }
 
   const handleChange = <K extends keyof ProductPayload>(
     key: K,
@@ -154,7 +157,7 @@ export function ProductFormDialog({
           </DialogTitle>
 
           <DialogDescription>
-            Mahsulot ma'lumotlarini to'ldiring va saqlang.
+            Mahsulot ma&apos;lumotlarini to&apos;ldiring va saqlang.
           </DialogDescription>
         </DialogHeader>
 
@@ -231,7 +234,7 @@ export function ProductFormDialog({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="price">Narx (so'm)</Label>
+                <Label htmlFor="price">Narx (so&apos;m)</Label>
                 <Input
                   id="price"
                   type="number"
@@ -257,7 +260,7 @@ export function ProductFormDialog({
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="kg">Og'irligi (kg)</Label>
+                <Label htmlFor="kg">Og&apos;irligi (kg)</Label>
                 <Input
                   id="kg"
                   type="number"

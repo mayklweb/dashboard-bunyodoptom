@@ -48,11 +48,11 @@ function Users() {
       <div className="flex min-h-75 items-center justify-center">
         <div className="text-center">
           <p className="text-sm font-medium">
-            Ma'lumotlarni yuklashda xatolik yuz berdi
+            Ma&apos;lumotlarni yuklashda xatolik yuz berdi
           </p>
 
           <p className="mt-1 text-xs text-muted-foreground">
-            Iltimos, sahifani qayta yuklab ko'ring.
+            Iltimos, sahifani qayta yuklab ko&apos;ring.
           </p>
         </div>
       </div>
@@ -160,7 +160,7 @@ function Users() {
 
           <Button onClick={() => handleOpenForm()} size="lg">
             <Plus />
-            Foydalanuvchi qo'shish
+            Foydalanuvchi qo&apos;shish
           </Button>
         </CardHeader>
 

@@ -13,12 +13,15 @@ export const fetchUsersApi = async (): Promise<User[]> => {
   return res.data
 }
 
-export const createUsersApi = async (payload: any) => {
+export const createUsersApi = async (payload: Record<string, unknown>) => {
   const res = await $api.post("/users", payload)
   return res.data
 }
 
-export const updateUsersApi = async (id: number, payload: any) => {
+export const updateUsersApi = async (
+  id: number,
+  payload: Record<string, unknown>
+) => {
   const res = await $api.patch(`/users/${id}`, payload)
   return res.data
 }

@@ -200,7 +200,7 @@ export function ProductsPageClient({
 
         <Button size="lg" onClick={handleAddClick}>
           <Plus className="mr-2 h-4 w-4" />
-          Mahsulot qo'shish
+          Mahsulot qo&apos;shish
         </Button>
       </div>
 

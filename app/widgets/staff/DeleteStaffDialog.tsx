@@ -32,10 +32,10 @@ export function DeleteStaffDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-xl">Xodimni o'chirish</AlertDialogTitle>
+          <AlertDialogTitle className="text-xl">Xodimni o&apos;chirish</AlertDialogTitle>
           <AlertDialogDescription className="text-base">
-            <strong>{staff?.name}</strong> Xodimini o'chirmoqchimisiz? Bu amalni
-            ortga qaytarib bo'lmaydi.
+            <strong>{staff?.name}</strong> Xodimini o&apos;chirmoqchimisiz? Bu amalni
+            ortga qaytarib bo&apos;lmaydi.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

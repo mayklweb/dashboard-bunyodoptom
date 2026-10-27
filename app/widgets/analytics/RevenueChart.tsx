@@ -21,13 +21,13 @@ export function RevenueChart({ summary }: { summary: AnalyticsSummary }) {
     <Card>
       <CardHeader>
         <CardTitle className="text-base">
-          So'nggi kunlar bo'yicha daromad
+          So&apos;nggi kunlar bo&apos;yicha daromad
         </CardTitle>
       </CardHeader>
       <CardContent>
         {summary.revenueByDay.length === 0 ? (
           <p className="py-10 text-center text-sm text-muted-foreground">
-            Ma'lumot yo'q
+            Ma&apos;lumot yo&apos;q
           </p>
         ) : (
           <ResponsiveContainer width="100%" height={280}>

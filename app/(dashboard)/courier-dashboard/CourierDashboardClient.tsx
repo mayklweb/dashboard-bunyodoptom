@@ -67,8 +67,7 @@ export function CourierDashboardClient() {
   const [busyId, setBusyId] = useState<CourierOrder["id"] | null>(null)
   const [cancelTarget, setCancelTarget] = useState<CourierOrder | null>(null)
 
-  const load = useCallback(async (silent = false) => {
-    silent ? setRefreshing(true) : setLoading(true)
+  const load = useCallback(async () => {
     try {
       setOrders(await fetchCourierOrders(todayISO()))
       setError(null)
@@ -80,12 +79,19 @@ export function CourierDashboardClient() {
     }
   }, [])
 
+  const refresh = useCallback(() => {
+    setRefreshing(true)
+    void load()
+  }, [load])
+
   // Birinchi yuklash + har 60 soniyada yangi buyurtmalarni tekshirish
   useEffect(() => {
-    load()
-    const t = setInterval(() => load(true), 60_000)
+    // load() faqat so'rov javobidan keyin setState qiladi
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void load()
+    const t = setInterval(refresh, 60_000)
     return () => clearInterval(t)
-  }, [load])
+  }, [load, refresh])
 
   const stats = useMemo(() => {
     const count = (s: OrderStatus) => orders.filter((o) => o.status === s).length
@@ -135,9 +141,8 @@ export function CourierDashboardClient() {
           ? `#${order.number} yetkazildi`
           : `#${order.number} bekor qilindi`
       )
-      load(true)
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Statusni o'zgartirib bo'lmadi")
+      refresh()
+    } catch (e) {      toast.error(e instanceof Error ? e.message : "Statusni o'zgartirib bo'lmadi")
     } finally {
       setBusyId(null)
     }
@@ -168,7 +173,7 @@ export function CourierDashboardClient() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => load(true)}
+          onClick={refresh}
           disabled={refreshing}
         >
           <RefreshCw

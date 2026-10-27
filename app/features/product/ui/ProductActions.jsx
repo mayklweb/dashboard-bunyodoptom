@@ -31,7 +31,7 @@ export default function ProductActions({ product }) {
           }
           className="w-full h-12 bg-primary text-white rounded-xl"
         >
-          Savatga qo'shish
+          Savatga qo&apos;shish
         </button>
       ) : (
         <div className="flex w-full justify-between bg-primary/10 rounded-xl p-2">

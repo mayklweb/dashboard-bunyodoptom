@@ -1,7 +1,7 @@
 // widgets/addresses/AddressFormDialog.tsx
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -37,24 +37,28 @@ export function AddressFormDialog({
   address,
 }: AddressFormDialogProps) {
   const [form, setForm] = useState<AddressPayload>(emptyForm)
+  const [prevResetKey, setPrevResetKey] = useState<string | null>(null)
   const createMutation = useCreateAddress()
   const updateMutation = useUpdateAddress()
 
   const isEdit = Boolean(address)
   const loading = createMutation.isPending || updateMutation.isPending
 
-  useEffect(() => {
-    if (address) {
-      setForm({
-        name: address.name,
-        region: address.region,
-        district: address.district,
-        address: address.address,
-      })
-    } else {
-      setForm(emptyForm)
-    }
-  }, [address, open])
+  // Dialog ochilganda yoki boshqa yozuv tanlanganda formani sinxronlaymiz
+  const resetKey = `${open}:${address?.id ?? "new"}`
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey)
+    setForm(
+      address
+        ? {
+            name: address.name,
+            region: address.region,
+            district: address.district,
+            address: address.address,
+          }
+        : emptyForm
+    )
+  }
 
   const handleChange = (key: keyof AddressPayload, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -86,7 +90,7 @@ export function AddressFormDialog({
             {isEdit ? "Manzilni tahrirlash" : "Yangi manzil qo'shish"}
           </DialogTitle>
           <DialogDescription>
-            Manzil ma'lumotlarini to'ldiring va saqlang.
+            Manzil ma&apos;lumotlarini to&apos;ldiring va saqlang.
           </DialogDescription>
         </DialogHeader>
 
@@ -123,7 +127,7 @@ export function AddressFormDialog({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="address">To'liq manzil</Label>
+            <Label htmlFor="address">To&apos;liq manzil</Label>
             <Input
               id="address"
               value={form.address}

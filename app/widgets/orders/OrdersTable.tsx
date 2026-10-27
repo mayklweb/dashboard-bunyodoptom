@@ -47,9 +47,9 @@ export function OrdersTable({ orders, onView }: OrdersTableProps) {
           <TableRow>
             <TableHead>№</TableHead>
             <TableHead>Mijoz</TableHead>
-            <TableHead>Do'kon</TableHead>
+            <TableHead>Do&apos;kon</TableHead>
             <TableHead>Summa</TableHead>
-            <TableHead>To'lov</TableHead>
+            <TableHead>To&apos;lov</TableHead>
             <TableHead>Holati</TableHead>
             <TableHead>Sana</TableHead>
             <TableHead className="text-right">Amallar</TableHead>
@@ -74,11 +74,11 @@ export function OrdersTable({ orders, onView }: OrdersTableProps) {
                   <span>{paymentLabel[order.payment_method] ?? order.payment_method}</span>
                   {order.payed ? (
                     <Badge variant="default" className="text-[10px]">
-                      To'langan
+                      To&apos;langan
                     </Badge>
                   ) : (
                     <Badge variant="outline" className="text-[10px]">
-                      To'lanmagan
+                      To&apos;lanmagan
                     </Badge>
                   )}
                 </div>

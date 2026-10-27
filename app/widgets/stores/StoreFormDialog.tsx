@@ -1,7 +1,7 @@
 // widgets/shops/ShopFormDialog.tsx
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -33,24 +33,28 @@ const emptyForm: StorePayload = {
 
 export function StoreFormDialog({ open, onOpenChange, store }: StoreFormDialogProps) {
   const [form, setForm] = useState<StorePayload>(emptyForm)
+  const [prevResetKey, setPrevResetKey] = useState<string | null>(null)
   const createMutation = useCreateStore()
   const updateMutation = useUpdateStore()
 
   const isEdit = Boolean(store)
   const loading = createMutation.isPending || updateMutation.isPending
 
-  useEffect(() => {
-    if (store) {
-      setForm({
-        name: store.name,
-        region: store.region,
-        district: store.district,
-        address: store.address,
-      })
-    } else {
-      setForm(emptyForm)
-    }
-  }, [store, open])
+  // Dialog ochilganda yoki boshqa yozuv tanlanganda formani sinxronlaymiz
+  const resetKey = `${open}:${store?.id ?? "new"}`
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey)
+    setForm(
+      store
+        ? {
+            name: store.name,
+            region: store.region,
+            district: store.district,
+            address: store.address,
+          }
+        : emptyForm
+    )
+  }
 
   const handleChange = (key: keyof StorePayload, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -82,13 +86,13 @@ export function StoreFormDialog({ open, onOpenChange, store }: StoreFormDialogPr
             {isEdit ? "Do'konni tahrirlash" : "Yangi do'kon qo'shish"}
           </DialogTitle>
           <DialogDescription>
-            Do'kon ma'lumotlarini to'ldiring va saqlang.
+            Do&apos;kon ma&apos;lumotlarini to&apos;ldiring va saqlang.
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-5 px-6 py-6">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="name">Do'kon nomi</Label>
+            <Label htmlFor="name">Do&apos;kon nomi</Label>
             <Input
               id="name"
               value={form.name}
@@ -119,7 +123,7 @@ export function StoreFormDialog({ open, onOpenChange, store }: StoreFormDialogPr
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="address">To'liq manzil</Label>
+            <Label htmlFor="address">To&apos;liq manzil</Label>
             <Input
               id="address"
               value={form.address}

@@ -29,7 +29,7 @@ function ProductCard({ product, onClick }) {
           {product.name}
         </h2>
         <p className="font-medium text-[#000000cc] text-base tracking-tight">
-          {product.price?.toLocaleString()} so'm
+          {product.price?.toLocaleString()} so&apos;m
         </p>
       </div>
     </div>

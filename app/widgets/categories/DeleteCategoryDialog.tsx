@@ -53,11 +53,11 @@ export function DeleteCategoryDialog({
       <AlertDialogContent size="default">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-xl">
-            Kategoriyani o'chirish
+            Kategoriyani o&apos;chirish
           </AlertDialogTitle>
           <AlertDialogDescription className="text-sm">
-            <strong>{category?.name}</strong> kategoriyasini o'chirmoqchimisiz?
-            Bu amalni ortga qaytarib bo'lmaydi.
+            <strong>{category?.name}</strong> kategoriyasini o&apos;chirmoqchimisiz?
+            Bu amalni ortga qaytarib bo&apos;lmaydi.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

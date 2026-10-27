@@ -32,10 +32,10 @@ export function DeleteStoreDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-xl">Do'konni o'chirish</AlertDialogTitle>
+          <AlertDialogTitle className="text-xl">Do&apos;konni o&apos;chirish</AlertDialogTitle>
           <AlertDialogDescription className="text-base">
-            <strong>{store?.name}</strong> do'konini o'chirmoqchimisiz? Bu amalni
-            ortga qaytarib bo'lmaydi.
+            <strong>{store?.name}</strong> do&apos;konini o&apos;chirmoqchimisiz? Bu amalni
+            ortga qaytarib bo&apos;lmaydi.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

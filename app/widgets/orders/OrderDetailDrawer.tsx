@@ -125,7 +125,7 @@ export function OrderDetailDrawer({
 
                 <div className="rounded-lg border p-4">
                   <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                    Do'kon
+                    Do&apos;kon
                   </p>
 
                   <p className="font-medium">{order.market?.name || "—"}</p>
@@ -226,7 +226,7 @@ export function OrderDetailDrawer({
                   <div className="flex flex-col gap-2">
                     <div>
                       <p className="text-xs text-muted-foreground">
-                        To'lov usuli
+                        To&apos;lov usuli
                       </p>
 
                       <p className="mt-1 text-sm font-medium">
@@ -237,7 +237,7 @@ export function OrderDetailDrawer({
 
                     <div>
                       <p className="text-xs text-muted-foreground">
-                        To'lov holati
+                        To&apos;lov holati
                       </p>
 
                       <p className="mt-1 text-sm font-medium">

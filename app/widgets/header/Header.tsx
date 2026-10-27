@@ -1,7 +1,7 @@
 // widgets/header/Header.tsx
 "use client"
 
-import { useEffect, useState } from "react"
+import { useSyncExternalStore } from "react"
 import { useTheme } from "next-themes"
 import { Moon, Sun } from "lucide-react"
 import { NotificationIcon } from "@/assets/icons"
@@ -14,14 +14,16 @@ import {
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
+const subscribe = () => () => {}
+
 function Header() {
   const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  // Hydration mismatchning oldini olish uchun
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  // Hydration mismatchning oldini olish uchun: serverda false, clientda true
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  )
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark")

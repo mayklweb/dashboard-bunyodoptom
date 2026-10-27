@@ -80,8 +80,7 @@ export function ManagerDashboardClient() {
   const [error, setError] = useState<string | null>(null)
   const [assigningId, setAssigningId] = useState<ManagerOrder["id"] | null>(null)
 
-  const load = useCallback(async (silent = false) => {
-    silent ? setRefreshing(true) : setLoading(true)
+  const load = useCallback(async () => {
     try {
       const [o, c] = await Promise.all([
         fetchAllOrdersForDate(todayISO()),
@@ -98,12 +97,19 @@ export function ManagerDashboardClient() {
     }
   }, [])
 
+  const refresh = useCallback(() => {
+    setRefreshing(true)
+    void load()
+  }, [load])
+
   // Birinchi yuklash + har 60 soniyada yangilash
   useEffect(() => {
-    load()
-    const t = setInterval(() => load(true), 60_000)
+    // load() faqat so'rov javobidan keyin setState qiladi
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void load()
+    const t = setInterval(refresh, 60_000)
     return () => clearInterval(t)
-  }, [load])
+  }, [load, refresh])
 
   const stats = useMemo(() => {
     const by = (s: ManagerOrder["status"]) =>
@@ -166,7 +172,7 @@ export function ManagerDashboardClient() {
       await assignOrders([order.id], courierId)
       const name = couriers.find((c) => String(c.id) === courierId)?.name
       toast.success(`#${order.number} ${name ?? "dastavshik"}ga biriktirildi`)
-      await load(true)
+      await load()
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Biriktirib bo'lmadi")
     } finally {
@@ -200,7 +206,7 @@ export function ManagerDashboardClient() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => load(true)}
+          onClick={refresh}
           disabled={refreshing}
         >
           <RefreshCw

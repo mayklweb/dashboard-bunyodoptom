@@ -52,10 +52,10 @@ export function DeleteProductDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Mahsulotni o'chirish</AlertDialogTitle>
+          <AlertDialogTitle>Mahsulotni o&apos;chirish</AlertDialogTitle>
           <AlertDialogDescription>
-            <strong>{product?.name}</strong> mahsulotini o'chirmoqchimisiz? Bu
-            amalni ortga qaytarib bo'lmaydi.
+            <strong>{product?.name}</strong> mahsulotini o&apos;chirmoqchimisiz? Bu
+            amalni ortga qaytarib bo&apos;lmaydi.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

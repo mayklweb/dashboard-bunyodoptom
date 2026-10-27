@@ -1,7 +1,7 @@
 // widgets/orders/CancelDialog.tsx
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -30,19 +30,6 @@ export function CancelDialog({
   loading,
   onConfirm,
 }: Props) {
-  const [reason, setReason] = useState("")
-  const [touched, setTouched] = useState(false)
-
-  // Dialog har safar ochilganda matn tozalanadi
-  useEffect(() => {
-    if (open) {
-      setReason("")
-      setTouched(false)
-    }
-  }, [open])
-
-  const invalid = touched && !reason.trim()
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -51,37 +38,61 @@ export function CancelDialog({
           <DialogDescription>{orderLabel}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-1">
-          <Textarea
-            placeholder="Bekor qilish sababini yozing..."
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            onBlur={() => setTouched(true)}
-            aria-invalid={invalid}
-            rows={4}
-          />
-          {invalid && (
-            <p className="text-sm text-red-500">Sabab majburiy</p>
-          )}
-        </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Orqaga
-          </Button>
-          <Button
-            variant="destructive"
-            disabled={loading}
-            onClick={() => {
-              setTouched(true)
-              if (reason.trim()) onConfirm(reason.trim())
-            }}
-          >
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Bekor qilish
-          </Button>
-        </DialogFooter>
+        {/* Dialog yopilganda unmount bo'ladi, shu sabab matn har safar tozalanadi */}
+        <CancelForm
+          loading={loading}
+          onConfirm={onConfirm}
+          onClose={() => onOpenChange(false)}
+        />
       </DialogContent>
     </Dialog>
+  )
+}
+
+function CancelForm({
+  loading,
+  onConfirm,
+  onClose,
+}: {
+  loading?: boolean
+  onConfirm: (reason: string) => void
+  onClose: () => void
+}) {
+  const [reason, setReason] = useState("")
+  const [touched, setTouched] = useState(false)
+
+  const invalid = touched && !reason.trim()
+
+  return (
+    <>
+      <div className="space-y-1">
+        <Textarea
+          placeholder="Bekor qilish sababini yozing..."
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          onBlur={() => setTouched(true)}
+          aria-invalid={invalid}
+          rows={4}
+        />
+        {invalid && <p className="text-sm text-red-500">Sabab majburiy</p>}
+      </div>
+
+      <DialogFooter>
+        <Button variant="outline" onClick={onClose}>
+          Orqaga
+        </Button>
+        <Button
+          variant="destructive"
+          disabled={loading}
+          onClick={() => {
+            setTouched(true)
+            if (reason.trim()) onConfirm(reason.trim())
+          }}
+        >
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Bekor qilish
+        </Button>
+      </DialogFooter>
+    </>
   )
 }

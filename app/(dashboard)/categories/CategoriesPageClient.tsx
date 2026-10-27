@@ -58,7 +58,7 @@ export function CategoriesPageClient({
         <h1 className="text-2xl font-semibold">Kategoriyalar</h1>
         <Button size={"lg"} variant="default" onClick={handleAddClick}>
           <Plus />
-          Kategoriya qo'shish
+          Kategoriya qo&apos;shish
         </Button>
       </div>
 

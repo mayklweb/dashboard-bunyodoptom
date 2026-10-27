@@ -26,7 +26,7 @@ export function StaffTable({ staff, onEdit, onDelete }: StaffTableProps) {
   if (safeStaff.length === 0) {
     return (
       <div className="rounded-md border border-border p-8 text-center text-muted-foreground">
-        Do'konlar topilmadi
+        Do&apos;konlar topilmadi
       </div>
     )
   }

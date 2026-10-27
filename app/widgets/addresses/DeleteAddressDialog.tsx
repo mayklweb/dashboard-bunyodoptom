@@ -33,11 +33,11 @@ export function DeleteAddressDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-xl">
-            Manzilni o'chirish
+            Manzilni o&apos;chirish
           </AlertDialogTitle>
           <AlertDialogDescription className="text-base">
-            <strong>{address?.name}</strong> manzilini o'chirmoqchimisiz? Bu
-            amalni ortga qaytarib bo'lmaydi.
+            <strong>{address?.name}</strong> manzilini o&apos;chirmoqchimisiz? Bu
+            amalni ortga qaytarib bo&apos;lmaydi.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

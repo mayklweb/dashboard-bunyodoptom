@@ -41,8 +41,6 @@ export function MyOrdersClient() {
   const [cancelTarget, setCancelTarget] = useState<CourierOrder | null>(null)
 
   const load = useCallback(async () => {
-    setLoading(true)
-
     try {
       const result = await fetchCourierOrders(date)
 
@@ -61,6 +59,8 @@ export function MyOrdersClient() {
   }, [date])
 
   useEffect(() => {
+    // load() faqat so'rov javobidan keyin setState qiladi
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load()
   }, [load])
 
@@ -120,7 +120,10 @@ export function MyOrdersClient() {
           type="date"
           className="w-40"
           value={date}
-          onChange={(e) => setDate(e.target.value)}
+          onChange={(e) => {
+            setLoading(true)
+            setDate(e.target.value)
+          }}
         />
       </div>
 

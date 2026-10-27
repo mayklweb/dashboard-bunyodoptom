@@ -1,7 +1,7 @@
 // widgets/sidebar/AppSidebar.tsx
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useSyncExternalStore } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 
@@ -21,25 +21,27 @@ import {
 import { getStoredUser, resolveRole, type Role } from "@/lib/auth"
 import { getMenuForRole } from "@/lib/menu"
 
+const subscribe = () => () => {}
+
+// localStorage faqat clientda mavjud, shuning uchun sessiya shu yerdan o'qiladi
+function getSession() {
+  if (typeof window === "undefined") return ""
+  const token = localStorage.getItem("token")
+  const user = getStoredUser()
+  if (!token || !user) return ""
+  return resolveRole(user) ?? "unknown"
+}
+
 export function AppSidebar() {
   const pathname = usePathname()
   const router = useRouter()
-  const [role, setRole] = useState<Role | null>(null)
-  const [ready, setReady] = useState(false)
+  const session = useSyncExternalStore(subscribe, getSession, () => "")
+  const ready = session !== ""
+  const role = ready && session !== "unknown" ? (session as Role) : null
 
-  // localStorage faqat clientda mavjud, shuning uchun useEffect ichida o'qiladi
   useEffect(() => {
-    const token = localStorage.getItem("token")
-    const user = getStoredUser()
-
-    if (!token || !user) {
-      router.replace("/login")
-      return
-    }
-
-    setRole(resolveRole(user))
-    setReady(true)
-  }, [router])
+    if (!session) router.replace("/login")
+  }, [session, router])
 
   const visibleGroups = useMemo(() => getMenuForRole(role), [role])
 

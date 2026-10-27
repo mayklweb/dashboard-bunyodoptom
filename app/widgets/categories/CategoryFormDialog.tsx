@@ -38,6 +38,7 @@ export function CategoryFormDialog({
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [prevResetKey, setPrevResetKey] = useState<string | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -47,23 +48,14 @@ export function CategoryFormDialog({
   // Initialize form
   // --------------------------------------------------
 
-  useEffect(() => {
-    if (!open) return
-
-    if (category) {
-      setName(category.name)
-      setPreviewUrl(getImageUrl(category.image))
-    } else {
-      setName("")
-      setPreviewUrl(null)
-    }
-
+  // Dialog ochilganda yoki boshqa yozuv tanlanganda formani sinxronlaymiz
+  const resetKey = `${open}:${category?.id ?? "new"}`
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey)
+    setName(category?.name ?? "")
+    setPreviewUrl(category ? getImageUrl(category.image) : null)
     setImageFile(null)
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""
-    }
-  }, [category, open])
+  }
 
   // --------------------------------------------------
   // Cleanup preview URL
@@ -228,7 +220,7 @@ export function CategoryFormDialog({
               />
 
               <p className="text-xs text-muted-foreground">
-                Kategoriya nomi foydalanuvchilarga ko'rsatiladi.
+                Kategoriya nomi foydalanuvchilarga ko&apos;rsatiladi.
               </p>
             </div>
           </div>
