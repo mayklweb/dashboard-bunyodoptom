@@ -9,7 +9,6 @@ import {
   deleteStore,
   type StorePayload,
 } from "@/lib/api/stores"
-import type { Store } from "@/types/store"
 import { toast } from "sonner"
 
 export function useStores() {

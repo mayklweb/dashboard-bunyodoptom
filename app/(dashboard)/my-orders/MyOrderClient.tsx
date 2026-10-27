@@ -64,8 +64,6 @@ export function MyOrdersClient() {
     load()
   }, [load])
 
-  const courierDistrict = "Urganch"
-
   const courierRegion = "Xorazm"
 
   const visible = useMemo(

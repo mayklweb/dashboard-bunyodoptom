@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Link } from "react-router-dom";
 import { FavoriteIcon } from "../../../assets/icons";
 import { useFavoritesStore } from "../../../app/store/useFavoritesStore";
@@ -16,7 +17,7 @@ function ProductCard({ product, onClick }) {
   const content = (
     <div className="w-full relative">
       <div className="rounded-xl overflow-hidden mb-2.5">
-        <img
+        <Image
           width={300}
           height={225}
           src={imageUrl}

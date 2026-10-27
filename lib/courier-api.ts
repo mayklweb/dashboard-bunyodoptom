@@ -146,7 +146,9 @@ export function extractList(json: any): any[] {
 export async function fetchCourierOrders(
   date: string
 ): Promise<CourierOrder[]> {
-  const json = await request(ENDPOINTS.orders)
+  const json = await request(
+    `${ENDPOINTS.orders}?date=${encodeURIComponent(date)}`
+  )
 
   console.log("Orders API raw response:", json)
 

@@ -1,5 +1,3 @@
-import { DashboardIcon } from "@/assets/icons/icons"
-
 // export { Logo } from './logo'
 export { CartIcon } from "@/assets/icons/icons"
 export { SearchIcon } from "@/assets/icons/icons"
