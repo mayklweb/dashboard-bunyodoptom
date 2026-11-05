@@ -1,3 +1,4 @@
+import { authHeaders } from "@/lib/auth/headers"
 // lib/api/categories.ts
 // export interface Category {
 //   id: number
@@ -39,6 +40,7 @@ export async function createCategory(
     {
       method: "POST",
       body: formData,
+      headers: authHeaders(),
     }
   )
   if (!res.ok) throw new Error("Kategoriya qo'shishda xatolik")
@@ -60,6 +62,7 @@ export async function updateCategory(
     {
       method: "PATCH",
       body: formData,
+      headers: authHeaders(),
     }
   )
   if (!res.ok) throw new Error("Kategoriyani yangilashda xatolik")
@@ -72,6 +75,7 @@ export async function deleteCategory(id: number): Promise<void> {
     `https://api.bunyodoptom.uz/api/v1/categories/categories/${id}`,
     {
       method: "DELETE",
+      headers: authHeaders(),
     }
   )
   if (!res.ok) throw new Error("Kategoriyani o'chirishda xatolik")

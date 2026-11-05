@@ -22,8 +22,6 @@ export function useUpdateOrderStatus() {
     
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] })
-      console.log("Status:", status);
-console.log("Payload:", { status });
       toast.success("Buyurtma statusi yangilandi")
       
     },

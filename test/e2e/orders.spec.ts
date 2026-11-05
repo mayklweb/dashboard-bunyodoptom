@@ -64,7 +64,8 @@ test.describe("orders page", () => {
 
     await page.goto("/orders")
 
-    // the table falls back to an empty list rather than crashing
+    await expect(page.getByRole("alert")).toContainText("Buyurtmalarni yuklashda xatolik yuz berdi.")
+    await expect(page.getByRole("button", { name: "Qayta urinish" })).toBeVisible()
     await expect(page.getByRole("heading", { name: "Buyurtmalar" })).toBeVisible()
     await expect(page.getByText("Buyurtmalar topilmadi")).toBeVisible()
   })

@@ -46,9 +46,9 @@ function normalizeOrder(o: any): ManagerOrder {
   return {
     id: o.id,
     number: String(o.number ?? o.order_number ?? o.id),
-    storeName: o.store_name ?? o.store?.name ?? o.customer_name ?? "Noma'lum do'kon",
-    address: o.address ?? o.store?.address ?? "",
-    phone: o.phone ?? o.store?.phone ?? "",
+    storeName: o.market?.name ?? o.store_name ?? o.store?.name ?? o.customer_name ?? "Noma'lum do'kon",
+    address: o.market?.address ?? o.store?.address ?? (typeof o.address === "string" ? o.address : o.address?.address) ?? "",
+    phone: o.phone ?? o.user?.phone ?? o.store?.phone ?? "",
     amount: Number(o.total_amount ?? o.amount ?? o.total ?? 0),
     status: normalizeStatus(o.status),
     courierId: o.courier_id ?? o.courier?.id ?? null,
@@ -79,9 +79,7 @@ export async function fetchOrders(q: OrdersQuery) {
 
 export async function fetchCouriers(): Promise<Courier[]> {
   const json = await request(ENDPOINTS.couriers)
-  const list: any[] = Array.isArray(json.data)
-    ? json.data
-    : json.data?.items ?? json.data?.data ?? []
+  const list: any[] = extractList(json)
   return list.map((c) => ({
     id: c.id,
     name: c.name ?? c.full_name ?? c.username ?? `Kuryer #${c.id}`,
@@ -96,10 +94,13 @@ export async function fetchAllOrdersForDate(date: string): Promise<ManagerOrder[
   let lastPage = 1
   do {
     const res = await fetchOrders({ date, page })
+    if (!Number.isSafeInteger(res.lastPage) || res.lastPage < 1 || res.lastPage > 1000) {
+      throw new Error("Buyurtmalar sahifalari soni noto‘g‘ri yoki 1000 dan ortiq")
+    }
     all.push(...res.orders)
     lastPage = res.lastPage
     page++
-  } while (page <= lastPage && page <= 20) // xavfsizlik uchun 20 sahifa bilan cheklangan
+  } while (page <= lastPage)
   return all
 }
 

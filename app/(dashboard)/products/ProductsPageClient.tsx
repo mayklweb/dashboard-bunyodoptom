@@ -175,7 +175,7 @@ export function ProductsPageClient({
 
     setPagination((prev) => ({
       ...prev,
-      total: prev.total + 1,
+      total: prev.total + (selectedProduct ? 0 : 1),
     }))
   }
 

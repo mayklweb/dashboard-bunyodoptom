@@ -92,7 +92,7 @@ describe("fetchOrders", () => {
     await fetchOrders({})
 
     const init = fetchMock.mock.calls[0][1] as RequestInit
-    expect((init.headers as Record<string, string>).Authorization).toBe(
+    expect(new Headers(init.headers).get("Authorization")).toBe(
       "Bearer test-token"
     )
   })
@@ -147,4 +147,35 @@ describe("fetchCouriers", () => {
       { id: 3, name: "Kuryer #3", phone: undefined },
     ])
   })
+})
+
+it("accepts a bare courier array", async () => {
+  vi.stubGlobal("fetch", vi.fn(async () => jsonResponse([{ id: 1, name: "Sardor" }])))
+  try {
+    expect(await fetchCouriers()).toEqual([{ id: 1, name: "Sardor", phone: undefined }])
+  } finally { vi.unstubAllGlobals() }
+})
+
+it("uses market and user details from the actual order shape", async () => {
+  vi.stubGlobal("fetch", vi.fn(async () => jsonResponse([{ id: 1,
+    market: { name: "Bozor", address: "Registon" },
+    user: { phone: "+998900000001" }, address: { address: "Yetkazish manzili" },
+  }])))
+  try {
+    const { orders } = await fetchOrders({})
+    expect(orders[0]).toMatchObject({ storeName: "Bozor", address: "Registon", phone: "+998900000001" })
+  } finally { vi.unstubAllGlobals() }
+})
+
+it("loads orders beyond page 20 instead of silently truncating the dashboard", async () => {
+  const { fetchAllOrdersForDate } = await import("@/lib/orders-api")
+  const fetchMock = vi.fn(async (url: string) => {
+    const page = Number(new URL(url).searchParams.get("page"))
+    return jsonResponse({ data: [{ id: page }], meta: { last_page: 21 } })
+  })
+  vi.stubGlobal("fetch", fetchMock)
+  try {
+    expect(await fetchAllOrdersForDate("2026-11-05")).toHaveLength(21)
+    expect(fetchMock).toHaveBeenCalledTimes(21)
+  } finally { vi.unstubAllGlobals() }
 })

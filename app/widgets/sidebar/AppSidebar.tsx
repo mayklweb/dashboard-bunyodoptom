@@ -18,7 +18,7 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar"
 
-import { getStoredUser, resolveRole, type Role } from "@/lib/auth"
+import { getStoredUser, logout, resolveRole, type Role } from "@/lib/auth"
 import { getMenuForRole } from "@/lib/menu"
 
 const subscribe = () => () => {}
@@ -35,12 +35,15 @@ function getSession() {
 export function AppSidebar() {
   const pathname = usePathname()
   const router = useRouter()
-  const session = useSyncExternalStore(subscribe, getSession, () => "")
-  const ready = session !== ""
+  const session = useSyncExternalStore(subscribe, getSession, () => undefined)
+  const ready = session !== undefined && session !== ""
   const role = ready && session !== "unknown" ? (session as Role) : null
 
   useEffect(() => {
-    if (!session) router.replace("/login")
+    if (session === "") {
+      logout()
+      router.replace("/login")
+    }
   }, [session, router])
 
   const visibleGroups = useMemo(() => getMenuForRole(role), [role])

@@ -168,3 +168,30 @@ describe("computeAnalytics", () => {
     expect(revenueByDay).toHaveLength(14)
   })
 })
+
+it("sums numeric strings and treats string zero as unpaid", () => {
+  const summary = computeAnalytics([
+    makeOrder({ total_amount: "100" as unknown as number, payed: "0" as unknown as Order["payed"] }),
+    makeOrder({ total_amount: "50" as unknown as number, payed: 1 }),
+  ])
+  expect(summary.totalRevenue).toBe(150)
+  expect(summary.paidRevenue).toBe(50)
+  expect(summary.unpaidRevenue).toBe(100)
+})
+
+it("keeps the latest days even when the API returns newest first", () => {
+  const orders = Array.from({ length: 16 }, (_, i) => makeOrder({
+    created_at: `2026-10-${String(16 - i).padStart(2, "0")}T10:00:00.000Z`,
+    total_amount: 16 - i,
+  }))
+  const { revenueByDay } = computeAnalytics(orders)
+  expect(revenueByDay.map((day) => day.revenue)).toEqual(Array.from({ length: 14 }, (_, i) => i + 3))
+})
+
+it("does not merge the same day from different years", () => {
+  const { revenueByDay } = computeAnalytics([
+    makeOrder({ created_at: "2025-10-20T10:00:00Z", total_amount: 10 }),
+    makeOrder({ created_at: "2026-10-20T10:00:00Z", total_amount: 20 }),
+  ])
+  expect(revenueByDay.map((day) => day.revenue)).toEqual([10, 20])
+})

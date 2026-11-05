@@ -19,6 +19,7 @@ import { z } from "zod"
 import { AlertCircle, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { saveSession } from "@/lib/auth"
 
 const loginSchema = z.object({
   phone: z.string().min(4, "Username must be at least 4 characters"),
@@ -61,19 +62,18 @@ export default function LoginPage() {
       )
 
       if (!response.ok) {
-        const errorData = await response.json()
+        const errorData = await response.json().catch(() => ({}))
         throw new Error(errorData.message || "Login failed")
       }
 
       const result = await response.json()
 
       const token = result.data?.token
-      if (!token) {
+      if (typeof token !== "string" || !token.trim()) {
         throw new Error("Login succeeded but no token was returned")
       }
 
-      localStorage.setItem("token", token)
-      localStorage.setItem("user", JSON.stringify(result.data.user))
+      saveSession(token, result.data.user)
 
       router.push("/")
     } catch (err) {

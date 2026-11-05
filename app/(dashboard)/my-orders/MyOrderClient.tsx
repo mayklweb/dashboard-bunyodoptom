@@ -44,8 +44,6 @@ export function MyOrdersClient() {
     try {
       const result = await fetchCourierOrders(date)
 
-      console.log("API dan kelgan natija:", result)
-      console.log("Buyurtmalar soni:", result.length)
 
       setOrders(result)
       setError(null)
@@ -64,25 +62,10 @@ export function MyOrdersClient() {
     load()
   }, [load])
 
-  const courierRegion = "Xorazm"
-
   const visible = useMemo(
-    () =>
-      orders.filter((order) => {
-        const region = order.market?.region?.trim().toLowerCase()
-
-        const matchesRegion = region === courierRegion.trim().toLowerCase()
-
-        const matchesStatus = filter === "all" || order.status === filter
-
-        return matchesRegion && matchesStatus
-      }),
+    () => orders.filter((order) => filter === "all" || order.status === filter),
     [orders, filter]
   )
-
-  console.log("Barcha buyurtmalar:", orders)
-  console.log("Birinchi buyurtma hududi:", orders[0]?.market)
-  console.log(visible)
 
   async function changeStatus(
     order: CourierOrder,

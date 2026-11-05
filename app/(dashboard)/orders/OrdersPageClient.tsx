@@ -8,7 +8,7 @@ import type { Order } from "@/types/order"
 import { OrderDetailDrawer } from "@/app/widgets/orders/OrderDetailDrawer"
 
 export function OrdersPageClient() {
-  const { data: orders, isLoading } = useOrders()
+  const { data: orders, isLoading, error, refetch } = useOrders()
 
 
   const [detailOpen, setDetailOpen] = useState(false)
@@ -25,6 +25,14 @@ export function OrdersPageClient() {
         <h1 className="text-2xl font-semibold">Buyurtmalar</h1>
       </div>
 
+      {error && (
+        <div role="alert" className="rounded-md border p-4 text-destructive">
+          <p>Buyurtmalarni yuklashda xatolik yuz berdi.</p>
+          <button type="button" className="mt-2 underline" onClick={() => void refetch()}>
+            Qayta urinish
+          </button>
+        </div>
+      )}
       {isLoading ? (
         <div className="rounded-md border p-8 text-center text-muted-foreground">
           Yuklanmoqda...

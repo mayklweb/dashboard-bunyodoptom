@@ -1,4 +1,4 @@
-import { api } from "../../../shared/api/client";
+import { api } from "@/lib/axios";
 
 export const authApi = {
   login: async (creds) => {

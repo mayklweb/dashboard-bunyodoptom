@@ -20,10 +20,10 @@ export function computeAnalytics(orders: Order[]): AnalyticsSummary {
   const safeOrders = orders ?? []
 
   const totalOrders = safeOrders.length
-  const totalRevenue = safeOrders.reduce((sum, o) => sum + o.total_amount, 0)
+  const totalRevenue = safeOrders.reduce((sum, o) => sum + Number(o.total_amount), 0)
   const paidRevenue = safeOrders
-    .filter((o) => o.payed)
-    .reduce((sum, o) => sum + o.total_amount, 0)
+    .filter((o) => Number(o.payed) === 1)
+    .reduce((sum, o) => sum + Number(o.total_amount), 0)
   const unpaidRevenue = totalRevenue - paidRevenue
 
   const statusCounts: Record<string, number> = {}
@@ -40,13 +40,13 @@ export function computeAnalytics(orders: Order[]): AnalyticsSummary {
       const existing = productMap.get(item.product_id)
       const subtotal = Number(item.subtotal)
       if (existing) {
-        existing.qty += item.qty
+        existing.qty += Number(item.qty)
         existing.revenue += subtotal
       } else {
         productMap.set(item.product_id, {
           id: item.product_id,
           name: item.product?.name ?? "Noma'lum",
-          qty: item.qty,
+          qty: Number(item.qty),
           revenue: subtotal,
         })
       }
@@ -58,15 +58,18 @@ export function computeAnalytics(orders: Order[]): AnalyticsSummary {
 
   const revenueMap = new Map<string, number>()
   for (const order of safeOrders) {
-    const date = new Date(order.created_at).toLocaleDateString("uz-UZ", {
-      day: "2-digit",
-      month: "2-digit",
-    })
-    revenueMap.set(date, (revenueMap.get(date) ?? 0) + order.total_amount)
+    const timestamp = new Date(order.created_at)
+    if (Number.isNaN(timestamp.getTime())) continue
+    const date = `${timestamp.getFullYear()}-${String(timestamp.getMonth() + 1).padStart(2, "0")}-${String(timestamp.getDate()).padStart(2, "0")}`
+    revenueMap.set(date, (revenueMap.get(date) ?? 0) + Number(order.total_amount))
   }
   const revenueByDay = Array.from(revenueMap.entries())
-    .map(([date, revenue]) => ({ date, revenue }))
+    .sort(([a], [b]) => a.localeCompare(b))
     .slice(-14)
+    .map(([date, revenue]) => ({
+      date: new Date(`${date}T00:00:00`).toLocaleDateString("uz-UZ", { day: "2-digit", month: "2-digit" }),
+      revenue,
+    }))
 
   return {
     totalOrders,

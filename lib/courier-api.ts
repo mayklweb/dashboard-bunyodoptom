@@ -3,8 +3,10 @@
 // Backend boshqacha bo'lsa, faqat shu faylni (ENDPOINTS va normalizeOrder) moslang.
 
 import { logout } from "./auth"
+import { API_BASE_URL } from "./api-config"
+import { authHeaders } from "./auth/headers"
 
-const BASE_URL = "https://api.bunyodoptom.uz/api/v1"
+const BASE_URL = API_BASE_URL
 
 const ENDPOINTS = {
   // GET -> buyurtmalar (kuryer tokeni bilan o'ziga tegishlilari qaytishi kerak)
@@ -99,18 +101,15 @@ function normalizeOrder(o: any): CourierOrder {
 }
 
 export async function request(path: string, init?: RequestInit) {
-  const token = localStorage.getItem("token")
   const res = await fetch(`${BASE_URL}${path}`, {
     ...init,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      ...init?.headers,
-    },
+    headers: authHeaders({ "Content-Type": "application/json", ...Object.fromEntries(new Headers(init?.headers)) }),
   })
 
   if (res.status === 401) {
     logout()
+    // Reload to clear cached data from the previous session.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/login"
     throw new Error("Sessiya tugadi, qayta kiring")
   }
@@ -118,6 +117,7 @@ export async function request(path: string, init?: RequestInit) {
     const err = await res.json().catch(() => null)
     throw new Error(err?.message || "Server xatosi")
   }
+  if (res.status === 204) return null
   return res.json()
 }
 
@@ -150,11 +150,9 @@ export async function fetchCourierOrders(
     `${ENDPOINTS.orders}?date=${encodeURIComponent(date)}`
   )
 
-  console.log("Orders API raw response:", json)
 
   const list = extractList(json)
 
-  console.log("Orders API list:", list)
 
   return list.map(normalizeOrder)
 }

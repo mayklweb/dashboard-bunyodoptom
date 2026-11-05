@@ -1,21 +1,24 @@
 import { create } from "zustand";
+import { saveSession, logout as clearSession } from "@/lib/auth";
+
+const storedToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
 export const useAuthStore = create((set) => ({
-  token: localStorage.getItem("token") || null,
-  isAuthenticated: !!localStorage.getItem("token"),
+  token: storedToken,
+  isAuthenticated: !!storedToken,
 
   login: (token) => {
-    localStorage.setItem("token", token);
+    saveSession(token);
     set({ token, isAuthenticated: true });
   },
 
   signup: (token) => {
-    localStorage.setItem("token", token);
+    saveSession(token);
     set({ token, isAuthenticated: true });
   },
 
   logout: () => {
-    localStorage.removeItem("token");
+    clearSession();
     set({ token: null, isAuthenticated: false });
   },
 }));

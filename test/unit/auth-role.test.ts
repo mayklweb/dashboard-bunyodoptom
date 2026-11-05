@@ -67,3 +67,15 @@ describe("stored user helpers", () => {
     expect(localStorage.getItem("theme")).toBe("dark")
   })
 })
+
+// Cookie-based route protection and browser API calls must share one session.
+describe("session cookie", () => {
+  it("stores the token cookie and removes it on logout", async () => {
+    const { saveSession } = await import("@/lib/auth")
+    saveSession("token/with=symbols", { id: 1, role: "admin" })
+    expect(document.cookie).toContain("token=token%2Fwith%3Dsymbols")
+    expect(localStorage.getItem("token")).toBe("token/with=symbols")
+    logout()
+    expect(document.cookie).not.toMatch(/(?:^|; )token=/)
+  })
+})

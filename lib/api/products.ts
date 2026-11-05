@@ -1,7 +1,10 @@
 // lib/api/products.ts
 import type { Product } from "@/types/product"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+import { API_BASE_URL } from "@/lib/api-config"
+import { authHeaders } from "@/lib/auth/headers"
+
+const API_URL = API_BASE_URL
 
 export interface ProductPayload {
   category_id: number
@@ -18,19 +21,21 @@ export interface ProductPayload {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const res = await fetch(`${API_URL}/products`, { cache: "no-store" })
+  const res = await fetch(`${API_URL}/products`, { cache: "no-store", headers: authHeaders() })
   if (!res.ok) throw new Error("Mahsulotlarni yuklashda xatolik")
-  return res.json()
+  const json = await res.json()
+  return json.data ?? json
 }
 
 export async function createProduct(payload: ProductPayload): Promise<Product> {
   const res = await fetch(`${API_URL}/products`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify(payload),
   })
   if (!res.ok) throw new Error("Mahsulot qo'shishda xatolik")
-  return res.json()
+  const json = await res.json()
+  return json.data ?? json
 }
 
 export async function updateProduct(
@@ -39,16 +44,18 @@ export async function updateProduct(
 ): Promise<Product> {
   const res = await fetch(`${API_URL}/products/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify(payload),
   })
   if (!res.ok) throw new Error("Mahsulotni yangilashda xatolik")
-  return res.json()
+  const json = await res.json()
+  return json.data ?? json
 }
 
 export async function deleteProduct(id: number): Promise<void> {
   const res = await fetch(`${API_URL}/products/${id}`, {
     method: "DELETE",
+    headers: authHeaders(),
   })
   if (!res.ok) throw new Error("Mahsulotni o'chirishda xatolik")
 }
@@ -63,6 +70,7 @@ export async function uploadProductImages(
   const res = await fetch(`${API_URL}/products/${productId}/images`, {
     method: "POST",
     body: formData,
+    headers: authHeaders(),
   })
   if (!res.ok) throw new Error("Rasmlarni yuklashda xatolik")
 }

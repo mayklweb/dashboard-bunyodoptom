@@ -64,7 +64,17 @@ export function getStoredUser(): AuthUser | null {
   }
 }
 
+export function saveSession(token: string, user?: AuthUser) {
+  if (typeof window === "undefined") return
+  localStorage.setItem("token", token)
+  if (user) localStorage.setItem("user", JSON.stringify(user))
+  else localStorage.removeItem("user")
+  document.cookie = `token=${encodeURIComponent(token)}; Path=/; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`
+}
+
 export function logout() {
+  if (typeof window === "undefined") return
   localStorage.removeItem("token")
   localStorage.removeItem("user")
+  document.cookie = "token=; Path=/; Max-Age=0; SameSite=Lax"
 }

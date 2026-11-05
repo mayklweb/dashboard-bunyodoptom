@@ -92,3 +92,23 @@ test.describe("authentication", () => {
     await expect(page).toHaveURL(/\/($|\?)/)
   })
 })
+
+test("keeps a newly logged-in session after a full reload", async ({ page }) => {
+  await mockApi(page)
+  await page.goto("/login")
+  await page.getByLabel("Username").fill("admin01")
+  await page.getByLabel("Password").fill("secret123")
+  await page.getByRole("button", { name: "Login" }).click()
+  await expect(page.getByRole("heading", { name: "Boshqaruv paneli" })).toBeVisible()
+  await page.reload()
+  await expect(page.getByRole("heading", { name: "Boshqaruv paneli" })).toBeVisible()
+  expect((await page.context().cookies()).some((cookie) => cookie.name === "token")).toBe(true)
+})
+
+test("recovers from a cookie without a stored user without a redirect loop", async ({ page }) => {
+  await page.context().addCookies([{ name: "token", value: "orphaned", url: process.env.E2E_BASE_URL ?? `http://127.0.0.1:${process.env.E2E_PORT ?? 3100}` }])
+  await mockApi(page)
+  await page.goto("/")
+  await expect(page).toHaveURL(/\/login$/)
+  await expect(page.getByLabel("Username")).toBeVisible()
+})
